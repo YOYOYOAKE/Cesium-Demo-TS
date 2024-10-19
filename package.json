@@ -1,0 +1,36 @@
+{
+  "name": "cesium-demo-ts",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@cesium-china/cesium-map": "^1.0.0",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@types/geojson": "^7946.0.14",
+    "cesium": "^1.122.0",
+    "element-plus": "^2.8.4",
+    "pinia": "^2.2.4",
+    "shapefile": "^0.6.6",
+    "vite-plugin-cesium": "^1.2.23",
+    "vue": "^3.5.10",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@iconify-json/ep": "^1.2.0",
+    "@types/shapefile": "^0.6.4",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "less": "^4.2.0",
+    "typescript": "^5.5.3",
+    "unplugin-auto-import": "^0.18.3",
+    "unplugin-element-plus": "^0.8.0",
+    "unplugin-icons": "^0.19.3",
+    "unplugin-vue-components": "^0.27.4",
+    "vite": "^5.4.8",
+    "vue-tsc": "^2.1.6"
+  }
+}

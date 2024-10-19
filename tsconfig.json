@@ -1,0 +1,34 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "include": [
+    "scripts/**/*.ts",
+    "./**/*.ts",
+    "./**/*.d.ts",
+    "./**/*.tsx",
+    "./**/*.vue",
+    "scripts/index.mts",
+    "scripts/templateTs/router/routes.ts",
+    "scripts/templateTs/router/index.ts",
+    "scripts/templateTs/main.ts",
+    "./vite-env.d.ts",
+    "types/*.d.ts",
+    "./*.ts",
+  ],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": false,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "allowJs": true
+  }
+}
