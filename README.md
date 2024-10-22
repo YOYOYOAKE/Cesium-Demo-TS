@@ -28,7 +28,7 @@ npm -g install pnpm
 pnpm install
 ```
 
-1. Start the development server:
+3. Start the development server:
 
 ```
 npm run dev
