@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CesiumContainer: typeof import('./components/CesiumContainer.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -17,6 +18,7 @@ declare module 'vue' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    FileUploader: typeof import('./components/FileUploader.vue')['default']
     IEpTools: typeof import('~icons/ep/tools')['default']
     MapController: typeof import('./components/MapController.vue')['default']
   }

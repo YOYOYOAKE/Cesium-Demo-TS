@@ -15,7 +15,7 @@ export default defineConfig({
     vue(),
     cesium(),
     AutoImport({
-      // imports: ['vue'],
+      imports: ['vue'],
       resolvers: [
         ElementPlusResolver(),
         IconsResolver({
@@ -23,6 +23,11 @@ export default defineConfig({
         }),
       ],
       dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
+      eslintrc: {
+        enabled: true,
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true
+      }
     }),
     Components({
       resolvers: [

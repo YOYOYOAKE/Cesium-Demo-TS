@@ -1,17 +1,15 @@
 <template>
   <div id="cesium-container"></div>
-  <MapController/>
+  <MapController />
 </template>
 
 <script setup>
-import {onMounted, markRaw} from 'vue'
 import * as Cesium from 'cesium'
 import MapController from './MapController.vue'
-import {useViewerStore} from '../stores/viewerStore'
-import {AMapImageryProvider} from '@cesium-china/cesium-map'
+import { useViewerStore } from '../stores/viewerStore'
+import { AMapImageryProvider } from '@cesium-china/cesium-map'
 
 const viewerStore = useViewerStore()
-const webKey = '8c84eee3a4eee2bee8714c49936b4ac9'
 
 onMounted(() => {
   const viewer = new Cesium.Viewer('cesium-container', {
@@ -53,4 +51,3 @@ onMounted(() => {
   }
 }
 </style>
-

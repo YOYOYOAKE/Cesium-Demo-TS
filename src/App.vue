@@ -1,11 +1,9 @@
 <template>
-    <CesiumContainer/>
+    <CesiumContainer />
 </template>
 
 <script setup>
 import CesiumContainer from './components/CesiumContainer.vue'
 </script>
 
-<style scoped>
-</style>
-
+<style scoped></style>

@@ -1,12 +1,13 @@
 {
   "name": "cesium-demo-ts",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint"
   },
   "dependencies": {
     "@cesium-china/cesium-map": "^1.0.0",
@@ -21,11 +22,16 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "@iconify-json/ep": "^1.2.0",
     "@types/shapefile": "^0.6.4",
     "@vitejs/plugin-vue": "^5.1.4",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.29.1",
+    "globals": "^15.11.0",
     "less": "^4.2.0",
     "typescript": "^5.5.3",
+    "typescript-eslint": "^8.10.0",
     "unplugin-auto-import": "^0.18.3",
     "unplugin-element-plus": "^0.8.0",
     "unplugin-icons": "^0.19.3",

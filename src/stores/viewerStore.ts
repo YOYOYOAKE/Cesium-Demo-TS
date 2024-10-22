@@ -10,7 +10,7 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // region Viewer
 
-    let cesiumViewer = reactive<Viewer | {}>({})
+    let cesiumViewer = reactive<Viewer | object>({})
     const setCesiumViewer = (viewer: Viewer): void => {
       cesiumViewer = viewer
     }

@@ -1,1 +1,1 @@
-declare module '@cesium-china/cesium-map';
+declare module '@cesium-china/cesium-map'
