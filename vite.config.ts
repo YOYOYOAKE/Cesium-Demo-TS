@@ -1,4 +1,4 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import cesium from 'vite-plugin-cesium'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -6,7 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
-import path from 'path'
+import path, { resolve } from 'path'
 
 const pathSrc = path.resolve(__dirname, 'src')
 
@@ -38,9 +38,16 @@ export default defineConfig({
       ],
       dts: path.resolve(pathSrc, 'components.d.ts'),
     }),
-
     Icons({
       autoInstall: true,
     }),
   ],
+  resolve: {
+    alias: [
+      {
+        find: '@',
+        replacement: resolve(__dirname, './src')
+      }
+    ]
+  }
 })

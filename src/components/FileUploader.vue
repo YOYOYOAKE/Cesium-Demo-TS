@@ -1,51 +1,31 @@
 <script setup lang="ts">
-// import {useDataStore} from '../stores/dataStore'
-// import {storeToRefs} from 'pinia'
-import { ref } from 'vue'
+import { useDataStore } from '@/stores/dataStore'
+import { storeToRefs } from 'pinia'
 
-// const dataStore = useDataStore()
+const dataStore = useDataStore()
 
-// const {isFileUploaderShow} = storeToRefs(dataStore)
+const { sheetHeaders } = storeToRefs(dataStore)
 
-const isFileUploaderShow = ref(false)
+const form = ref({})
 
-const closeDialog = () => {
-  isFileUploaderShow.value = false
-}
-
-const handleUpload = () => {
-  console.log('上传数据')
-  closeDialog()
-}
-
-const handleCancel = () => {
-  console.log('取消上传')
-  closeDialog()
-}
-
-const childData = ref('childData')
-const childMethod = () => {
-  console.log('Child method called')
-}
-
-defineExpose({
-  childData,
-  childMethod,
-})
+const requiredFields = ref([
+  { name: 'lng', label: '经度', description: '点的经度' },
+  { name: 'lat', label: '纬度', description: '点的纬度' },
+  { name: 'time', label: '时间', description: '点的时间' },
+])
 
 </script>
 
 <template>
+  <el-form :model="form" label-width="auto" style="max-width: 600px">
 
-  <el-dialog :v-model="isFileUploaderShow" title="Tips" width="500" :before-close="handleCancel">
-    <span>This is a message</span>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" @click="handleUpload">上传</el-button>
-      </div>
-    </template>
-  </el-dialog>
+    <el-form-item v-for="(field, index) in requiredFields" :key="index" :label="field.label">
+      <el-select v-model="form[field.name]" :placeholder="`请选择${field.label}字段`" >
+        <el-option v-for="(header, index) in sheetHeaders" :key="index" :label="header" :value="header" />
+      </el-select>
+    </el-form-item>
+
+  </el-form>
 
 </template>
 

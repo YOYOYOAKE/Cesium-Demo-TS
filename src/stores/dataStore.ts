@@ -1,11 +1,13 @@
-import {defineStore} from 'pinia'
-import {Ref, ref} from 'vue'
+import { defineStore } from 'pinia'
 
 export const useDataStore = defineStore('dataStore',
   () => {
-    const isFileUploaderShow: Ref<boolean> = ref(false)
+
+    const sheetHeaders: Ref<Array<string>> = ref([])
+    const sheetContent: Ref<Array<Array<string>>> = ref([])
 
     return {
-      isFileUploaderShow,
+      sheetHeaders,
+      sheetContent
     }
   })
