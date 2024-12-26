@@ -13,20 +13,41 @@ const openFileUploader = (): void => {
   isSubDrawerOpen.value = true
 }
 
-const handleSubDrawerClose = (done: () => void): void => {
+const fileUploaderRef = useTemplateRef('fileUploader')
+
+const closeSubDrawer = (): void => {
+  isSubDrawerOpen.value = false
+  if (fileUploaderRef.value) {
+    fileUploaderRef.value.clearSelectedFields()
+  }
+}
+
+const handleSubDrawerCloseAfterSave = (): void => {
+  closeSubDrawer()
+  ElMessage({
+    type: 'success',
+    message: '已保存数据',
+  })
+}
+
+const handleSubDrawerCloseAfterCancel = (): void => {
   ElMessageBox.confirm(
-    '确定要关闭字段选择吗？已加载的数据将不会保存。',
+    '确定要取消字段选择吗？已加载的数据将不会被保存。',
     '警告',
     {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
-    }
-  )
+    })
     .then(() => {
-      done()
+      closeSubDrawer()
+      ElMessage({
+        type: 'info',
+        message: '已取消',
+      })
     })
     .catch(() => {
+      // do nothing
     })
 }
 
@@ -38,13 +59,15 @@ const handleSubDrawerClose = (done: () => void): void => {
     <BaseManagement />
     <el-divider content-position="left">Shp图层管理</el-divider>
     <ShpManagement />
-    <el-divider content-position="left" v-if="false">数据管理</el-divider>
-    <DataManagement v-if="false" @openFileUploader="openFileUploader" />
+    <el-divider content-position="left">数据管理</el-divider>
+    <DataManagement @openFileUploader="openFileUploader" />
 
     <!-- 二级抽屉 -->
     <div>
-      <el-drawer v-model="isSubDrawerOpen" title="字段选择" direction="ltr" :beforeClose="handleSubDrawerClose" size="30%">
-        <FileUploader />
+      <el-drawer v-model="isSubDrawerOpen" title="预览并选择字段" direction="ltr"
+        :beforeClose="handleSubDrawerCloseAfterCancel" size="30%">
+        <FileUploader ref="fileUploader" @save="handleSubDrawerCloseAfterSave"
+          @cancel="handleSubDrawerCloseAfterCancel" />
       </el-drawer>
     </div>
 

@@ -77,7 +77,7 @@ const handleDataUpload = async (dataFile): Promise<void> => {
     })
 
     const loadingMessage = ElMessage({
-      message: `正在读取文件${uploadDataName.value}`,
+      message: `正在读取文件“${uploadDataName.value}”`,
       type: 'info',
       duration: 0,
     })

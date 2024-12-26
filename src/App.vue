@@ -6,4 +6,11 @@
 import CesiumContainer from './components/CesiumContainer.vue'
 </script>
 
-<style scoped></style>
+<style>
+
+/* Global Style */
+
+.el-drawer .el-drawer__header {
+    margin-bottom: 0;
+}
+</style>
