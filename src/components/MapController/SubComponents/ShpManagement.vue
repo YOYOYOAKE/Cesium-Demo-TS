@@ -26,24 +26,24 @@
 </template>
 
 <script setup lang="ts">
-import { useViewerStore } from '@/stores/viewerStore'
+import { useShpStore } from '@/stores/shpStore'
 import * as shapeFile from 'shapefile'
-const viewerStore = useViewerStore()
+const shpStore = useShpStore()
 
 
-const { shpList } = viewerStore
+const { shpList } = shpStore
 
 const selectedShp: Ref<Array<string>> = ref([])
 
 watch(selectedShp, (newValue, oldValue) => {
   const added = newValue.filter(item => !oldValue.includes(item))
   if (added.length > 0) {
-    viewerStore.addShp(added[0])
+    shpStore.addShp(added[0])
   }
 
   const removed = oldValue.filter(item => !newValue.includes(item))
   if (removed.length > 0) {
-    viewerStore.removeShp(removed[0])
+    shpStore.removeShp(removed[0])
   }
 })
 
@@ -66,7 +66,7 @@ const handleShpUpload = (shpFile): void => {
     fileReader.readAsArrayBuffer(shpFile.raw)
     fileReader.onload = ev => {
       shapeFile.read(ev.target?.result as ArrayBuffer).then(geoJson => {
-        viewerStore.createShp({
+        shpStore.createShp({
           name: uploadShpName.value,
           geoJson: geoJson,
         })

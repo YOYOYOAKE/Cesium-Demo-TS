@@ -5,8 +5,8 @@
 
 <script setup>
 import * as Cesium from 'cesium'
-import MapController from './MapController/Index.vue'
-import { useViewerStore } from '../stores/viewerStore'
+import MapController from '@/components/MapController/Index.vue'
+import { useViewerStore } from '@/stores/viewerStore'
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 
 const viewerStore = useViewerStore()

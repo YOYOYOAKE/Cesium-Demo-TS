@@ -3,7 +3,7 @@ import {ImageryLayer, Viewer} from 'cesium'
 import {Reactive, reactive} from 'vue'
 import {AMapImageryProvider} from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
-import {type GeoData, GeoDataLayerList, type GeoDataList} from '../types'
+import {type GeoData, GeoDataLayerList} from '../types'
 
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
@@ -62,52 +62,6 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // endregion
 
-    // region Shp
-
-    const shpList: Reactive<GeoDataList> = reactive([])
-
-    const createShp = (newShp: GeoData): void => {
-      shpList.push(newShp)
-    }
-
-    const addShp = async (name: string): Promise<void> => {
-      const res: GeoData | undefined = shpList.find((shp) => {
-        return shp.name === name
-      })
-      if (res) {
-        await addLayer(res)
-      }
-    }
-
-    const removeShp = (name: string): void => {
-      removeLayer(name)
-    }
-
-    // endregion
-
-    // region Data
-
-    const dataList: Reactive<GeoDataList> = reactive([])
-
-    const createData = (newData: GeoData): void => {
-      dataList.push(newData)
-    }
-
-    const addData = async (name: string): Promise<void> => {
-      const res: GeoData | undefined = dataList.find((shp) => {
-        return shp.name === name
-      })
-      if (res) {
-        await addLayer(res)
-      }
-    }
-
-    const removeData = (name: string): void => {
-      removeLayer(name)
-    }
-
-    // endregion
-
     // region Layer
 
     /*
@@ -146,12 +100,12 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // endregion
 
-
     return {
       cesiumViewer, setCesiumViewer,
       addBaseMap, removeAllMap,
       addAnnoMap, removeAnnoMap,
-      shpList, createShp, addShp, removeShp,
-      dataList, createData, addData, removeData,
+      // shpList, createShp, addShp, removeShp,
+      // dataList, createData, addData, removeData,
+      addLayer, removeLayer,
     }
   })
