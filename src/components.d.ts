@@ -7,9 +7,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    BaseManagement: typeof import('./components/MapController/BaseManagement.vue')['default']
+    BaseManagement: typeof import('./components/MapController/SubComponents/BaseManagement.vue')['default']
     CesiumContainer: typeof import('./components/CesiumContainer.vue')['default']
-    DataManagement: typeof import('./components/MapController/DataManagement.vue')['default']
+    DataManagement: typeof import('./components/MapController/SubComponents/DataManagement.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
@@ -23,9 +23,10 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
-    FileUploader: typeof import('./components/FileUploader.vue')['default']
+    FileUploader: typeof import('./components/MapController/SubComponents/FileUploader.vue')['default']
     IEpTools: typeof import('~icons/ep/tools')['default']
-    MapController: typeof import('./components/MapController.vue')['default']
-    ShpManagement: typeof import('./components/MapController/ShpManagement.vue')['default']
+    Index: typeof import('./components/MapController/Index.vue')['default']
+    MapController: typeof import('./components/MapController/Index.vue')['default']
+    ShpManagement: typeof import('./components/MapController/SubComponents/ShpManagement.vue')['default']
   }
 }

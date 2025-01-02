@@ -18,6 +18,6 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     IEpTools: typeof import('~icons/ep/tools')['default']
-    MapController: typeof import('./src/components/MapController.vue')['default']
+    MapController: typeof import('./src/components/MapController/Index.vue')['default']
   }
 }

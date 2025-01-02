@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import FileUploader from './FileUploader.vue'
-import BaseManagement from '@/components/MapController/BaseManagement.vue'
-import ShpManagement from '@/components/MapController/ShpManagement.vue'
-import DataManagement from '@/components/MapController/DataManagement.vue'
+import FileUploader from './SubComponents/FileUploader.vue'
+import BaseManagement from '@/components/MapController/SubComponents/BaseManagement.vue'
+import ShpManagement from '@/components/MapController/SubComponents/ShpManagement.vue'
+import DataManagement from '@/components/MapController/SubComponents/DataManagement.vue'
+
+defineOptions({
+  name: 'MapController',
+})
 
 const isDrawerOpen: Ref<boolean> = ref(false)
 

@@ -26,8 +26,11 @@
 <script setup lang="ts">
 import { useViewerStore } from '@/stores/viewerStore'
 import { useDataStore } from '@/stores/dataStore'
-import { defineEmits } from 'vue'
 import { storeToRefs } from 'pinia'
+
+defineOptions({
+  name: 'DataManagement',
+})
 
 const viewerStore = useViewerStore()
 const dataStore = useDataStore()
