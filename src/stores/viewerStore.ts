@@ -1,9 +1,10 @@
-import {defineStore} from 'pinia'
-import {ImageryLayer, Viewer} from 'cesium'
-import {Reactive, reactive} from 'vue'
-import {AMapImageryProvider} from '@cesium-china/cesium-map'
+import { defineStore } from 'pinia'
+import { Reactive, reactive } from 'vue'
+import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
-import {type GeoData, GeoDataLayerList} from '../types'
+
+import { NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer } from '../types'
+import { type ImageryLayer, Viewer } from 'cesium'
 
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
@@ -73,9 +74,9 @@ export const useViewerStore = defineStore('cesiumViewer',
       To solve this problem, we defined a name property to every data source as the unique identification.
      */
 
-    const currentLayerList: Reactive<GeoDataLayerList> = reactive([])
+    const currentLayerList: Reactive<NamedGeoJsonLayer[]> = reactive([])
 
-    const addLayer = async (data: GeoData): Promise<void> => {
+    const addLayer = async (data: NamedGeoJson): Promise<void> => {
       if (cesiumViewer instanceof Viewer) {
         const dataSource = await cesiumViewer.dataSources.add(await Cesium.GeoJsonDataSource.load(data.geoJson))
         dataSource.name = data.name
@@ -100,12 +101,25 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // endregion
 
+    const addPrimitiveByCoordinates = (data: NamedPointCoordinates): void => {
+      const { coordinates } = data
+      if (cesiumViewer instanceof Viewer) {
+        const pointCollection = cesiumViewer.scene.primitives.add(new Cesium.PointPrimitiveCollection())
+        coordinates.forEach((coordinate) => {
+          pointCollection.add({
+            position: Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]),
+            color: Cesium.Color.RED,
+            pixelSize: 10,
+          })
+        })
+      }
+    }
+
     return {
       cesiumViewer, setCesiumViewer,
       addBaseMap, removeAllMap,
       addAnnoMap, removeAnnoMap,
-      // shpList, createShp, addShp, removeShp,
-      // dataList, createData, addData, removeData,
       addLayer, removeLayer,
+      addPrimitiveByCoordinates
     }
   })

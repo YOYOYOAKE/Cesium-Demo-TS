@@ -1,16 +1,17 @@
 import { GeoJSON } from 'geojson'
 import { DataSource } from 'cesium'
 
-export interface GeoData {
+export interface NamedGeoJson {
   name: string,
   geoJson: GeoJSON
 }
 
-export type GeoDataList = Array<GeoData>
-
-export interface GeoDataLayer {
+export interface NamedGeoJsonLayer {
   name: string,
   dataSource: DataSource
 }
 
-export type GeoDataLayerList = Array<GeoDataLayer>
+export interface NamedPointCoordinates {
+  name: string,
+  coordinates: [number, number][]
+}

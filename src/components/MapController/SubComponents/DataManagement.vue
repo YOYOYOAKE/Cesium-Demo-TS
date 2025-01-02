@@ -31,17 +31,17 @@ const dataStore = useDataStore()
 
 const { dataList } = dataStore
 
-const selectedData: Ref<Array<string>> = ref([])
+const selectedData: Ref<string> = ref('')
 
 watch(selectedData, (newValue, oldValue) => {
-  const added = newValue.filter(item => !oldValue.includes(item))
-  const removed = oldValue.filter(item => !newValue.includes(item))
+  const added = newValue
+  const removed = oldValue
 
-  if (added.length > 0) {
-    dataStore.addData(added[0])
+  if (added !== '') {
+    dataStore.addData(added)
   }
-  if (removed.length > 0) {
-    dataStore.removeData(removed[0])
+  if (removed !== '') {
+    dataStore.removeData(removed)
   }
 })
 

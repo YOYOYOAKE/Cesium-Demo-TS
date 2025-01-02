@@ -1,67 +1,53 @@
 import { defineStore } from 'pinia'
-import { Reactive } from 'vue'
-import { GeoDataList, GeoData } from '../types'
 import { useViewerStore } from './viewerStore'
-import { GeoJSON } from 'geojson'
+import { Reactive } from 'vue'
+
+import { type NamedPointCoordinates } from '../types'
+// import { Viewer } from 'cesium'
+
 
 export const useDataStore = defineStore('dataStore',
   () => {
 
-    const { addLayer, removeLayer } = useViewerStore()
+    const { addPrimitiveByCoordinates } = useViewerStore()
+
 
     const sheetName: Ref<string> = ref('')
     const sheetHeaders: Ref<string[]> = ref([])
     const sheetContent: Ref<Record<string, string | number>[]> = ref([])
 
-    const dataList: Reactive<GeoDataList> = reactive([])
+    const dataList: Reactive<NamedPointCoordinates[]> = reactive([])
 
-    const createData = (newData: GeoData): void => {
+    const createData = (newData: NamedPointCoordinates): void => {
       dataList.push(newData)
     }
 
     const addData = async (name: string): Promise<void> => {
-      const res: GeoData | undefined = dataList.find((shp) => {
-        return shp.name === name
+      const res: NamedPointCoordinates | undefined = dataList.find((data) => {
+        return data.name === name
       })
+
+      console.log(res)
+
       if (res) {
-        await addLayer(res)
+        addPrimitiveByCoordinates(res)
+
       }
     }
 
     const removeData = (name: string): void => {
-      removeLayer(name)
+      // removeLayer(name)
+      console.log(name)
     }
 
     const saveData = (fieldsMap: Record<string, string>): void => {
-
-      // Extract the data from the sheetContent
-
-      const result = sheetContent.value.map((item) => {
-        const newObj: Record<string, string | number> = {}
-        for (const key in fieldsMap) {
-          const fieldName: string = fieldsMap[key]
-          newObj[key] = item[fieldName]
-        }
-        return newObj
+      const result: [number, number][] = sheetContent.value.map((item) => {
+        return [item[fieldsMap.lng] as number, item[fieldsMap.lat] as number]
       })
-
-      // Transform the result into a GeoJSON object
-
-      const geoJson: GeoJSON = {
-        type: 'FeatureCollection',
-        features: result.map(point => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [point.lng as number, point.lat as number]
-          },
-          properties: {}
-        }))
-      }
 
       createData({
         name: sheetName.value,
-        geoJson: geoJson
+        coordinates: result
       })
 
       sheetName.value = ''
