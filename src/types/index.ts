@@ -1,5 +1,5 @@
-import {GeoJSON} from 'geojson'
-import {DataSource} from 'cesium'
+import { GeoJSON } from 'geojson'
+import { DataSource } from 'cesium'
 
 export interface GeoData {
   name: string,

@@ -27,11 +27,11 @@ const closeSubDrawer = (): void => {
 }
 
 const handleSubDrawerCloseAfterSave = (): void => {
-  closeSubDrawer()
   ElMessage({
     type: 'success',
     message: '已保存数据',
   })
+  closeSubDrawer()
 }
 
 const handleSubDrawerCloseAfterCancel = (): void => {
@@ -44,11 +44,11 @@ const handleSubDrawerCloseAfterCancel = (): void => {
       type: 'warning',
     })
     .then(() => {
-      closeSubDrawer()
       ElMessage({
         type: 'info',
         message: '已取消',
       })
+      closeSubDrawer()
     })
     .catch(() => {
       // do nothing

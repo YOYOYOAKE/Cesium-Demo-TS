@@ -25,9 +25,12 @@ const requiredFields = ref([
 const handleSave = (): void => {
   const selectedFieldsValues = Object.keys(selectedFields.value)
   const requiredFieldsNames = requiredFields.value.map(field => field.name)
+
   const lengthFlag = selectedFieldsValues.length === requiredFieldsNames.length
   const nameFlag = requiredFieldsNames.every(name => selectedFieldsValues.includes(name))
+
   if (lengthFlag && nameFlag) {
+    dataStore.saveData(selectedFields.value)
     emits('save')
   } else {
     ElMessage({

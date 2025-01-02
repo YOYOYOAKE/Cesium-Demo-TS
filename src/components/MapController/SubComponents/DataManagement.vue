@@ -24,18 +24,12 @@
 </template>
 
 <script setup lang="ts">
-import { useViewerStore } from '@/stores/viewerStore'
 import { useDataStore } from '@/stores/dataStore'
 import { storeToRefs } from 'pinia'
 
-defineOptions({
-  name: 'DataManagement',
-})
-
-const viewerStore = useViewerStore()
 const dataStore = useDataStore()
 
-const { dataList } = viewerStore
+const { dataList } = dataStore
 
 const selectedData: Ref<Array<string>> = ref([])
 
@@ -44,10 +38,10 @@ watch(selectedData, (newValue, oldValue) => {
   const removed = oldValue.filter(item => !newValue.includes(item))
 
   if (added.length > 0) {
-    viewerStore.addData(added[0])
+    dataStore.addData(added[0])
   }
   if (removed.length > 0) {
-    viewerStore.removeData(removed[0])
+    dataStore.removeData(removed[0])
   }
 })
 
@@ -93,8 +87,9 @@ const handleDataUpload = async (dataFile): Promise<void> => {
       loadingMessage.close()
       ElMessage.success('文件读取完成')
 
-      const { sheetHeaders, sheetContent } = storeToRefs(dataStore)
+      const { sheetName, sheetHeaders, sheetContent } = storeToRefs(dataStore)
 
+      sheetName.value = uploadDataName.value
       sheetHeaders.value = data.header
       sheetContent.value = data.content
 
@@ -112,6 +107,7 @@ const handleDataUpload = async (dataFile): Promise<void> => {
     ElMessage.error('与现有数据名称重复')
   }
 }
+
 </script>
 
 <style lang="less" scoped>
