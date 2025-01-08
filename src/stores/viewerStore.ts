@@ -11,10 +11,8 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // region Viewer
 
-    let cesiumViewer = reactive<Viewer | object>({})
-    const setCesiumViewer = (viewer: Viewer): void => {
-      cesiumViewer = viewer
-    }
+    // @ts-expect-error 将Cesium挂载到全局对象上
+    const cesiumViewer = window.CesiumViewer 
 
     // endregion
 
@@ -116,7 +114,8 @@ export const useViewerStore = defineStore('cesiumViewer',
     }
 
     return {
-      cesiumViewer, setCesiumViewer,
+      cesiumViewer,
+      // setCesiumViewer,
       addBaseMap, removeAllMap,
       addAnnoMap, removeAnnoMap,
       addLayer, removeLayer,

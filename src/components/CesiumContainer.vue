@@ -6,10 +6,7 @@
 <script setup>
 import * as Cesium from 'cesium'
 import MapController from '@/components/MapController/Index.vue'
-import { useViewerStore } from '@/stores/viewerStore'
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
-
-const viewerStore = useViewerStore()
 
 onMounted(() => {
   const viewer = new Cesium.Viewer('cesium-container', {
@@ -20,7 +17,7 @@ onMounted(() => {
     sceneModePicker: false,
     timeline: false,
     navigationHelpButton: false,
-    baseLayerPicker: false
+    baseLayerPicker: false 
   })
   viewer.imageryLayers.removeAll()
 
@@ -33,11 +30,12 @@ onMounted(() => {
     destination: Cesium.Cartesian3.fromDegrees(116.40, 39.92, 20000)
   })
 
-  viewerStore.setCesiumViewer(markRaw(viewer))
-
   // 设置相机的最小和最大距离
   viewer.scene.screenSpaceCameraController.minimumZoomDistance = 350
   viewer.scene.screenSpaceCameraController.maximumZoomDistance = 300000
+
+  // 将CesiumViewer实例挂在到window全局对象上
+  window.CesiumViewer = viewer
 })
 
 
