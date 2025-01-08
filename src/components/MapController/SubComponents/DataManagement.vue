@@ -25,7 +25,6 @@
 
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
-import { storeToRefs } from 'pinia'
 
 const dataStore = useDataStore()
 
@@ -81,17 +80,14 @@ const handleDataUpload = async (dataFile): Promise<void> => {
 
     const buffer: ArrayBuffer = await readFileAsync(dataFile)
     const worker = new Worker(new URL('@/utils/excelWorker.ts', import.meta.url), { type: 'module' })
-    worker.onmessage = (event) => {
-      const { data } = event
 
+    worker.onmessage = (event) => {
       loadingMessage.close()
       ElMessage.success('文件读取完成')
 
-      const { sheetName, sheetHeaders, sheetContent } = storeToRefs(dataStore)
+      const { data: { header, content } } = event
 
-      sheetName.value = uploadDataName.value
-      sheetHeaders.value = data.header
-      sheetContent.value = data.content
+      dataStore.setSheet(uploadDataName.value, header, content)
 
       dataSelectRef.value.focus()
       dataSelectRef.value.blur()
@@ -101,6 +97,7 @@ const handleDataUpload = async (dataFile): Promise<void> => {
     }
 
     worker.postMessage(buffer)
+
   } catch (error) {
     console.log(error)
     uploadDataName.value = ''

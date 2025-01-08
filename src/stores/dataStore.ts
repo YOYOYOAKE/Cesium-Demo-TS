@@ -1,20 +1,33 @@
 import { defineStore } from 'pinia'
 import { useViewerStore } from './viewerStore'
 import { Reactive } from 'vue'
-
 import { type NamedPointCoordinates } from '../types'
-// import { Viewer } from 'cesium'
-
 
 export const useDataStore = defineStore('dataStore',
   () => {
 
     const { addPrimitiveByCoordinates } = useViewerStore()
 
+    // Define the sheet object
+    const sheet: {
+      name: string,
+      headers: string[],
+      content: Record<string, string | number>[]
+    } = {
+      name: '',
+      headers: [],
+      content: []
+    }
 
-    const sheetName: Ref<string> = ref('')
-    const sheetHeaders: Ref<string[]> = ref([])
-    const sheetContent: Ref<Record<string, string | number>[]> = ref([])
+    const setSheet = (name: string, headers: string[], content: Record<string, string | number>[]): void => {
+      sheet.name = name
+      sheet.headers = headers
+      sheet.content = content
+    }
+
+    const getSheet = () => {
+      return sheet
+    }
 
     const dataList: Reactive<NamedPointCoordinates[]> = reactive([])
 
@@ -27,38 +40,33 @@ export const useDataStore = defineStore('dataStore',
         return data.name === name
       })
 
-      console.log(res)
-
       if (res) {
         addPrimitiveByCoordinates(res)
-
       }
     }
 
     const removeData = (name: string): void => {
-      // removeLayer(name)
       console.log(name)
     }
 
     const saveData = (fieldsMap: Record<string, string>): void => {
-      const result: [number, number][] = sheetContent.value.map((item) => {
+      const result: [number, number][] = sheet.content.map((item) => {
         return [item[fieldsMap.lng] as number, item[fieldsMap.lat] as number]
       })
 
       createData({
-        name: sheetName.value,
+        name: sheet.name,
         coordinates: result
       })
 
-      sheetName.value = ''
-      sheetHeaders.value = []
-      sheetContent.value = []
+      // Reset the sheet object after saving the data
+      sheet.name = ''
+      sheet.headers = []
+      sheet.content = []
     }
 
     return {
-      sheetName,
-      sheetHeaders,
-      sheetContent,
+      setSheet, getSheet,
       dataList,
       createData,
       addData,

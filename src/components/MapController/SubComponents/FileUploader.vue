@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
-import { storeToRefs } from 'pinia'
 
 const dataStore = useDataStore()
 
 const emits = defineEmits(['save', 'cancel'])
 
-const { sheetHeaders, sheetContent } = storeToRefs(dataStore)
+const { headers: sheetHeaders, content: sheetContent } = dataStore.getSheet()
 
-const previewSheetContent = sheetContent.value.slice(0, 3)
+const previewSheetContent = sheetContent.slice(0, 3)
 
 const selectedFields = ref({})
 
@@ -19,7 +18,6 @@ const clearSelectedFields = (): void => {
 const requiredFields = ref([
   { name: 'lng', label: '经度', description: '点的经度' },
   { name: 'lat', label: '纬度', description: '点的纬度' },
-  // { name: 'time', label: '时间', description: '点的时间' },
 ])
 
 const handleSave = (): void => {
