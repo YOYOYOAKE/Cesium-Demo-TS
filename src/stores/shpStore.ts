@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { Reactive } from 'vue'
-import { GeoDataList, NamedGeoJson } from '../types'
+import { NamedGeoJson } from '../types'
 import { useViewerStore } from './viewerStore'
 
 export const useShpStore = defineStore('shpStore', () => {
 
   const { addLayer, removeLayer } = useViewerStore()
 
-  const shpList: Reactive<GeoDataList> = reactive([])
+  const shpList: Reactive<NamedGeoJson[]> = reactive([])
 
   const createShp = (newShp: NamedGeoJson): void => {
     shpList.push(newShp)
