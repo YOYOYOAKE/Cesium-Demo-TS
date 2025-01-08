@@ -34,7 +34,13 @@ onMounted(() => {
   })
 
   viewerStore.setCesiumViewer(markRaw(viewer))
+
+  // 设置相机的最小和最大距离
+  viewer.scene.screenSpaceCameraController.minimumZoomDistance = 350
+  viewer.scene.screenSpaceCameraController.maximumZoomDistance = 300000
 })
+
+
 
 </script>
 
