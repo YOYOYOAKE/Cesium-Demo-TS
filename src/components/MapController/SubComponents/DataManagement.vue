@@ -32,15 +32,9 @@ const { dataList } = dataStore
 
 const selectedData: Ref<string> = ref('')
 
-watch(selectedData, (newValue, oldValue) => {
-  const added = newValue
-  const removed = oldValue
-
+watch(selectedData, (added) => {
   if (added !== '') {
-    dataStore.addData(added)
-  }
-  if (removed !== '') {
-    dataStore.removeData(removed)
+    dataStore.updateData(added)
   }
 })
 

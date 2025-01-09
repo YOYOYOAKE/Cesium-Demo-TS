@@ -4,7 +4,10 @@
       <el-option v-for="(style, index) in baseMapList" :key="index" :label="style.name" :value="style.style" />
     </el-select>
 
-    <el-switch v-if="isShowAnnoSwitch" v-model="isShowAnnoLayer" size="large" inline-prompt active-text="注记显示"
+    <el-switch v-model="isShowCityModel" size="large" inline-prompt active-text="模型显示" inactive-text="模型隐藏"
+    @change="updateCityModel" />
+
+    <el-switch v-if="isShowAnnoLayerSwitch" v-model="isShowAnnoLayer" size="large" inline-prompt active-text="注记显示"
       inactive-text="注记隐藏" @change="updateAnnoLayer" />
   </div>
 
@@ -24,13 +27,18 @@ const baseMapList = [
 const selectedMap: Ref<'img' | 'elec'> = ref('elec')
 
 // For annotation layer switch. The switch will be displayed when mapStyle is 'img', hidden when 'elec'.
-const isShowAnnoSwitch: Ref<boolean> = ref(false)
+const isShowAnnoLayerSwitch: Ref<boolean> = ref(false)
 
 const updateLayer = (mapStyle: 'img' | 'elec'): void => {
-  // When base layer is changed, remove the old base layer, include the annotation layer, since base layer and annotation layer are same in Cesium viewer.
-  viewerStore.removeAllMap()
+
   viewerStore.addBaseMap(mapStyle)
-  isShowAnnoSwitch.value = mapStyle === 'img'
+
+  if (mapStyle === 'img') {
+    isShowAnnoLayerSwitch.value = true
+  } else if (mapStyle === 'elec') {
+    isShowAnnoLayerSwitch.value = false
+    isShowAnnoLayer.value = false
+  }
 }
 
 const isShowAnnoLayer: Ref<boolean> = ref(false)
@@ -43,11 +51,26 @@ const updateAnnoLayer = (): void => {
     viewerStore.removeAnnoMap()
   }
 }
+
+const isShowCityModel: Ref<boolean> = ref(false)
+
+const updateCityModel = (): void => {
+  if (isShowCityModel.value) {
+    viewerStore.addCityModel()
+  } else {
+    viewerStore.removeCityModel()
+  }
+}
+
 </script>
 
 <style lang="less" scoped>
 .el-select {
-  width: 240px;
+  width: 200px;
+  margin-right: 8px;
+}
+
+.el-switch {
   margin-right: 8px;
 }
 </style>

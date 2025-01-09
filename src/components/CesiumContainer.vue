@@ -17,7 +17,7 @@ onMounted(() => {
     sceneModePicker: false,
     timeline: false,
     navigationHelpButton: false,
-    baseLayerPicker: false 
+    baseLayerPicker: false
   })
   viewer.imageryLayers.removeAll()
 

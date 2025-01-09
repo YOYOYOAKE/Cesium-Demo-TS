@@ -6,7 +6,7 @@ import { type NamedPointCoordinates } from '../types'
 export const useDataStore = defineStore('dataStore',
   () => {
 
-    const { addPrimitiveByCoordinates } = useViewerStore()
+    const viewerStore = useViewerStore()
 
     // Define the sheet object
     const sheet: {
@@ -35,18 +35,14 @@ export const useDataStore = defineStore('dataStore',
       dataList.push(newData)
     }
 
-    const addData = async (name: string): Promise<void> => {
+    const updateData = async (name: string): Promise<void> => {
       const res: NamedPointCoordinates | undefined = dataList.find((data) => {
         return data.name === name
       })
 
       if (res) {
-        addPrimitiveByCoordinates(res)
+        viewerStore.addPointsCollection(res)
       }
-    }
-
-    const removeData = (name: string): void => {
-      console.log(name)
     }
 
     const saveData = (fieldsMap: Record<string, string>): void => {
@@ -69,8 +65,7 @@ export const useDataStore = defineStore('dataStore',
       setSheet, getSheet,
       dataList,
       createData,
-      addData,
-      removeData,
+      updateData,
       saveData
     }
   })

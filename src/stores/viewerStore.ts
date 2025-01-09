@@ -3,65 +3,55 @@ import { Reactive, reactive } from 'vue'
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
 
-import { NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer } from '../types'
-import { type ImageryLayer, Viewer } from 'cesium'
+import { type NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer } from '../types'
+import { type ImageryLayer } from 'cesium'
 
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
 
-    // region Viewer
+    // @ts-expect-error: Mount instance of Cesium viewer to global object `window`
+    const cesiumViewer = window.CesiumViewer
 
-    // @ts-expect-error 将Cesium挂载到全局对象上
-    const cesiumViewer = window.CesiumViewer 
-
-    // endregion
-
-    // region Base Map
+    // #region Base Map
 
     const addBaseMap = (mapStyle: 'img' | 'elec' | 'cva'): void => {
-      if (cesiumViewer instanceof Viewer) {
-        cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
-          style: mapStyle,
-          crs: 'WGS84',
-        }))
-      }
+      cesiumViewer.imageryLayers.removeAll()
+      cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
+        style: mapStyle,
+        crs: 'WGS84',
+      }))
     }
 
-    const removeAllMap = (): void => {
-      if (cesiumViewer instanceof Viewer) {
-        cesiumViewer.imageryLayers.removeAll()
-      }
-    }
+    // const removeAllMap = (): void => {
+    // }
 
-    // endregion
+    // #endregion
 
-    // region Annotation Map
+    // #region Annotation Map
 
     let annoMap: ImageryLayer
     // Because annotation map is same with base map in Cesium, saving the annotation map index is necessary to ensure Cesium will not remove a wrong map.
     let annoMapIndex: number
 
     const addAnnoMap = (): void => {
-      if (cesiumViewer instanceof Viewer) {
-        annoMap = cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
-          style: 'cva',
-          crs: 'WGS84',
-        }))
-        // Here save the index of annotation layer.
-        annoMapIndex = cesiumViewer.imageryLayers.indexOf(annoMap)
-      }
+      annoMap = cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
+        style: 'cva',
+        crs: 'WGS84',
+      }))
+      // Here save the index of annotation layer.
+      annoMapIndex = cesiumViewer.imageryLayers.indexOf(annoMap)
     }
 
     const removeAnnoMap = (): void => {
       // Only when annotation map is exist (the index is greater than -1), the following will be executed.
-      if (cesiumViewer instanceof Viewer && annoMapIndex >= 0) {
+      if (annoMapIndex >= 0) {
         cesiumViewer.imageryLayers.remove(cesiumViewer.imageryLayers.get(annoMapIndex))
       }
     }
 
-    // endregion
+    // #endregion
 
-    // region Layer
+    // #region Layer
 
     /*
       Here are two problems.
@@ -75,50 +65,71 @@ export const useViewerStore = defineStore('cesiumViewer',
     const currentLayerList: Reactive<NamedGeoJsonLayer[]> = reactive([])
 
     const addLayer = async (data: NamedGeoJson): Promise<void> => {
-      if (cesiumViewer instanceof Viewer) {
-        const dataSource = await cesiumViewer.dataSources.add(await Cesium.GeoJsonDataSource.load(data.geoJson))
-        dataSource.name = data.name
+      const dataSource = await cesiumViewer.dataSources.add(await Cesium.GeoJsonDataSource.load(data.geoJson))
+      dataSource.name = data.name
 
-        currentLayerList.push({
-          name: data.name,
-          dataSource: dataSource,
-        })
-      }
+      currentLayerList.push({
+        name: data.name,
+        dataSource: dataSource,
+      })
     }
 
     const removeLayer = (name: string): void => {
-      if (cesiumViewer instanceof Viewer) {
-        const removedShpLayer = currentLayerList.find((item) => {
-          return item.name === name
-        })
-        if (removedShpLayer) {
-          cesiumViewer.dataSources.remove(cesiumViewer.dataSources.getByName(removedShpLayer.name)[0])
-        }
+      const removedShpLayer = currentLayerList.find((item) => {
+        return item.name === name
+      })
+      if (removedShpLayer) {
+        cesiumViewer.dataSources.remove(cesiumViewer.dataSources.getByName(removedShpLayer.name)[0])
       }
     }
 
-    // endregion
+    // #endregion
 
-    const addPrimitiveByCoordinates = (data: NamedPointCoordinates): void => {
+    // #region Points Collection
+
+    let pointCollection: Cesium.PointPrimitiveCollection | null = null
+
+    const addPointsCollection = (data: NamedPointCoordinates): void => {
       const { coordinates } = data
-      if (cesiumViewer instanceof Viewer) {
-        const pointCollection = cesiumViewer.scene.primitives.add(new Cesium.PointPrimitiveCollection())
-        coordinates.forEach((coordinate) => {
-          pointCollection.add({
-            position: Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]),
-            color: Cesium.Color.RED,
-            pixelSize: 10,
-          })
-        })
+      if (pointCollection) {
+        cesiumViewer.scene.primitives.remove(pointCollection)
+        pointCollection = null
       }
+      pointCollection = cesiumViewer.scene.primitives.add(new Cesium.PointPrimitiveCollection())
+      coordinates.forEach((coordinate) => {
+        pointCollection?.add({
+          position: Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]),
+          color: Cesium.Color.RED,
+          pixelSize: 10,
+        })
+      })
     }
+
+    // #endregion
+
+    // #region CityModel
+
+    let cityModel: Cesium.Cesium3DTileset | null = null
+
+    const addCityModel = async () => {
+      const tileset = await Cesium.Cesium3DTileset.fromUrl('/models/tileset.json')
+      cityModel = cesiumViewer.scene.primitives.add(tileset)
+    }
+
+    const removeCityModel = () => {
+      cesiumViewer.scene.primitives.remove(cityModel)
+    }
+
+    // #endregion
 
     return {
       cesiumViewer,
-      // setCesiumViewer,
-      addBaseMap, removeAllMap,
+      addBaseMap,
+      // removeAllMap,
       addAnnoMap, removeAnnoMap,
       addLayer, removeLayer,
-      addPrimitiveByCoordinates
+      addPointsCollection,
+      addCityModel, removeCityModel,
+      // addPrimitive, removePrimitive
     }
   })
