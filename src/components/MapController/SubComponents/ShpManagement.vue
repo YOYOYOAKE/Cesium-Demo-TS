@@ -1,34 +1,30 @@
 <script setup lang="ts">
 import { useShpStore } from '@/stores/shpStore'
+import { readFileAsync } from '@/utils/fileReader'
 import * as shapeFile from 'shapefile'
-const shpStore = useShpStore()
 
+const shpStore = useShpStore()
 
 const { shpList } = shpStore
 
 const selectedShp: Ref<Array<string>> = ref([])
 
 watch(selectedShp, (newValue, oldValue) => {
-  const added = newValue.filter(item => !oldValue.includes(item))
-  if (added.length > 0) {
-    shpStore.addShp(added[0])
-  }
+  const [added] = newValue.filter(item => !oldValue.includes(item))
+  const [removed] = oldValue.filter(item => !newValue.includes(item))
 
-  const removed = oldValue.filter(item => !newValue.includes(item))
-  if (removed.length > 0) {
-    shpStore.removeShp(removed[0])
-  }
+  if (added) shpStore.addShp(added)
+  if (removed) shpStore.removeShp(removed)
 })
 
 const isAllowShpUpload: Ref<boolean> = ref(false)
 
 const uploadShpName: Ref<string> = ref('')
 
-const handleShpUpload = (elFile): void => {
+const handleShpUpload = async (elFile): void => {
   const shpFile = elFile.raw
-  if (uploadShpName.value === '') {
-    uploadShpName.value = shpFile.name
-  }
+  uploadShpName.value = uploadShpName.value || shpFile.name
+
   try {
     shpList.forEach(shp => {
       if (shp.name === uploadShpName.value) {
@@ -36,17 +32,16 @@ const handleShpUpload = (elFile): void => {
         throw new Error('与现有Shp图层名称重复')
       }
     })
-    const fileReader = new FileReader()
-    fileReader.readAsArrayBuffer(shpFile)
-    fileReader.onload = ev => {
-      shapeFile.read(ev.target?.result as ArrayBuffer).then(geoJson => {
-        shpStore.createShp({
-          name: uploadShpName.value,
-          geoJson: geoJson,
-        })
-        uploadShpName.value = ''
+
+    const buffer: ArrayBuffer = await readFileAsync(shpFile)
+
+    shapeFile.read(buffer).then(geoJson => {
+      shpStore.createShp({
+        name: uploadShpName.value,
+        geoJson: geoJson,
       })
-    }
+      uploadShpName.value = ''
+    })
   } catch (error) {
     ElMessage.error(error.message)
   }

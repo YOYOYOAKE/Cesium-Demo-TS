@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useDataStore } from '@/stores/dataStore'
+import { readFileAsync } from '@/utils/fileReader'
+
 const emit = defineEmits(['openFileUploader'])
 const dataStore = useDataStore()
 
@@ -12,15 +14,6 @@ watch(selectedData, (added) => {
 const isAllowDataUpload: Ref<boolean> = ref(false)
 
 const uploadDataName: Ref<string> = ref('')
-
-const readFileAsync = (file): Promise<ArrayBuffer> => {
-  return new Promise((resolve, reject) => {
-    const fileReader = new FileReader()
-    fileReader.onload = (ev) => resolve(ev.target.result as ArrayBuffer)
-    fileReader.onerror = (error) => reject(error)
-    fileReader.readAsArrayBuffer(file)
-  })
-}
 
 const { dataList } = dataStore
 const dataSelectRef = useTemplateRef('dataSelectRef')
@@ -44,6 +37,7 @@ const uploadData = async (elFile): Promise<void> => {
     })
 
     const buffer: ArrayBuffer = await readFileAsync(nativeFile)
+
     const worker = new Worker(new URL('@/utils/excelWorker.ts', import.meta.url), { type: 'module' })
 
     worker.onmessage = (event) => {

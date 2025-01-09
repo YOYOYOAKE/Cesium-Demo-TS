@@ -1,18 +1,14 @@
-import { defineStore } from 'pinia'
-import { Reactive, reactive } from 'vue'
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
-
 import { type NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer } from '../types'
-import { type ImageryLayer } from 'cesium'
+import config from '../config'
 
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
-
-    // @ts-expect-error: Mount instance of Cesium viewer to global object `window`
+    // @ts-expect-error: 将Cesium Viewer的实例挂在到全局对象window上，以便在其他地方调用。
     const cesiumViewer = window.CesiumViewer
 
-    // #region Base Map
+    // #region 底图
 
     const updateBaseMap = (mapStyle: 'img' | 'elec' | 'cva'): void => {
       cesiumViewer.imageryLayers.removeAll()
@@ -27,68 +23,56 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #endregion
 
-    // #region Annotation Map
+    // #region 注记图层
 
-    let annoMap: ImageryLayer
-    // Because annotation map is same with base map in Cesium, saving the annotation map index is necessary to ensure Cesium will not remove a wrong map.
-    let annoMapIndex: number
+    let annoMapIndex: number = 0
 
     const addAnnoMap = (): void => {
-      annoMap = cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
+      const annoMap = cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
         style: 'cva',
         crs: 'WGS84',
       }))
-      // Here save the index of annotation layer.
+      // 保存一下注记图层的索引，以便后续删除。
       annoMapIndex = cesiumViewer.imageryLayers.indexOf(annoMap)
     }
 
     const removeAnnoMap = (): void => {
-      // Only when annotation map is exist (the index is greater than -1), the following will be executed.
-      if (annoMapIndex >= 0) {
-        cesiumViewer.imageryLayers.remove(cesiumViewer.imageryLayers.get(annoMapIndex))
-      }
+      // 当注记图层存在时（索引大于-1），才会执行以下操作。
+      if (annoMapIndex >= 0) cesiumViewer.imageryLayers.remove(cesiumViewer.imageryLayers.get(annoMapIndex))
     }
 
     // #endregion
 
-    // #region Layer
+    // #region Shp
 
-    /*
-      Here are two problems.
-      1. In Cesium, to render a shp file layer, or to render a point layer, we must format them to GeoJSON, KML or other vector format.
-      We need to handle these vector format data to cesium data source, then Cesium can render these data.
-      So there is no differences among these data, Cesium will save them to the same list, and it is not necessary for us to deliberately distinguish them.
-      2. Not the same as base layer, we usually add or remove different data, and these operation will scrambled layer index.
-      To solve this problem, we defined a name property to every data source as the unique identification.
-     */
+    const currentShpList: NamedGeoJsonLayer[] = []
 
-    const currentLayerList: Reactive<NamedGeoJsonLayer[]> = reactive([])
-
-    const addLayer = async (data: NamedGeoJson): Promise<void> => {
+    const addShp = async (data: NamedGeoJson): Promise<void> => {
       const dataSource = await cesiumViewer.dataSources.add(await Cesium.GeoJsonDataSource.load(data.geoJson))
       dataSource.name = data.name
 
-      currentLayerList.push({
+      currentShpList.push({
         name: data.name,
         dataSource: dataSource,
       })
     }
 
-    const removeLayer = (name: string): void => {
-      const removedShpLayer = currentLayerList.find((item) => {
-        return item.name === name
-      })
+    const removeShp = (name: string): void => {
+      const removedShpLayer = currentShpList.find((item) => item.name === name)
       if (removedShpLayer) {
-        cesiumViewer.dataSources.remove(cesiumViewer.dataSources.getByName(removedShpLayer.name)[0])
+        // dataSources.getByName()方法返回的是一个数组，而由于之前限定了命名不能重复，所以数组中只有一个元素，解构赋值出第一个即可。
+        const [removed] = cesiumViewer.dataSources.getByName(removedShpLayer.name)
+        cesiumViewer.dataSources.remove(removed)
       }
     }
 
     // #endregion
 
-    // #region Points Collection
+    // #region 点数据
 
     let pointCollection: Cesium.PointPrimitiveCollection | null = null
 
+    // 因为地图上只同时存在一个点集，所以此处使用“update”而非“add”
     const updatePointsCollection = (data: NamedPointCoordinates): void => {
       const { coordinates } = data
       if (pointCollection) {
@@ -107,12 +91,12 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #endregion
 
-    // #region CityModel
+    // #region 建筑白模
 
     let cityModel: Cesium.Cesium3DTileset | null = null
 
     const addCityModel = async () => {
-      const tileset = await Cesium.Cesium3DTileset.fromUrl('/models/tileset.json')
+      const tileset = await Cesium.Cesium3DTileset.fromUrl(config.TILESET_URL)
       cityModel = cesiumViewer.scene.primitives.add(tileset)
     }
 
@@ -125,11 +109,9 @@ export const useViewerStore = defineStore('cesiumViewer',
     return {
       cesiumViewer,
       updateBaseMap,
-      // removeAllMap,
       addAnnoMap, removeAnnoMap,
-      addLayer, removeLayer,
+      addLayer: addShp, removeLayer: removeShp,
       updatePointsCollection,
       addCityModel, removeCityModel,
-      // addPrimitive, removePrimitive
     }
   })

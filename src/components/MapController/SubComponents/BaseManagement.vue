@@ -1,17 +1,3 @@
-<template>
-  <div>
-    <el-select v-model="selectedMap" placeholder="请选择地图样式" size="large" @change="updateLayer(selectedMap)">
-      <el-option v-for="(style, index) in baseMapList" :key="index" :label="style.name" :value="style.style" />
-    </el-select>
-
-    <el-switch v-model="isShowCityModel" size="large" inline-prompt active-text="模型显示" inactive-text="模型隐藏"
-    @change="updateCityModel" />
-
-    <el-switch v-if="isShowAnnoLayerSwitch" v-model="isShowAnnoLayer" size="large" inline-prompt active-text="注记显示"
-      inactive-text="注记隐藏" @change="updateAnnoLayer" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useViewerStore } from '@/stores/viewerStore'
 
@@ -60,6 +46,20 @@ const updateCityModel = (): void => {
 }
 
 </script>
+
+<template>
+  <div>
+    <el-select v-model="selectedMap" placeholder="请选择地图样式" size="large" @change="updateLayer(selectedMap)">
+      <el-option v-for="(style, index) in baseMapList" :key="index" :label="style.name" :value="style.style" />
+    </el-select>
+
+    <el-switch v-model="isShowCityModel" size="large" inline-prompt active-text="模型显示" inactive-text="模型隐藏"
+    @change="updateCityModel" />
+
+    <el-switch v-if="isShowAnnoLayerSwitch" v-model="isShowAnnoLayer" size="large" inline-prompt active-text="注记显示"
+      inactive-text="注记隐藏" @change="updateAnnoLayer" />
+  </div>
+</template>
 
 <style lang="less" scoped>
 .el-select {

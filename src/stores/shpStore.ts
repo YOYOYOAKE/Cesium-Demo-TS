@@ -1,5 +1,3 @@
-import { defineStore } from 'pinia'
-import { Reactive } from 'vue'
 import { NamedGeoJson } from '../types'
 import { useViewerStore } from './viewerStore'
 
@@ -7,14 +5,14 @@ export const useShpStore = defineStore('shpStore', () => {
 
   const { addLayer, removeLayer } = useViewerStore()
 
-  const shpList: Reactive<NamedGeoJson[]> = reactive([])
+  const shpList: Ref<NamedGeoJson[]> = ref([])
 
   const createShp = (newShp: NamedGeoJson): void => {
-    shpList.push(newShp)
+    shpList.value.push(newShp)
   }
 
   const addShp = async (name: string): Promise<void> => {
-    const res: NamedGeoJson | undefined = shpList.find((shp) => {
+    const res: NamedGeoJson | undefined = shpList.value.find((shp) => {
       return shp.name === name
     })
     if (res) {

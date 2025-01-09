@@ -15,7 +15,7 @@ export default defineConfig({
     vue(),
     cesium(),
     AutoImport({
-      imports: ['vue'],
+      imports: ['vue', 'pinia'],
       resolvers: [
         ElementPlusResolver(),
         IconsResolver({
@@ -43,11 +43,9 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: [
-      {
-        find: '@',
-        replacement: resolve(__dirname, './src')
-      }
-    ]
+    alias: {
+      '@': resolve(__dirname, './src'),
+      '*': resolve('')
+    }
   }
 })

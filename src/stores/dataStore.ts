@@ -1,6 +1,4 @@
-import { defineStore } from 'pinia'
 import { useViewerStore } from './viewerStore'
-import { Reactive } from 'vue'
 import { type NamedPointCoordinates } from '../types'
 
 export const useDataStore = defineStore('dataStore',
@@ -32,10 +30,10 @@ export const useDataStore = defineStore('dataStore',
 
     // #region Data List
 
-    const dataList: Reactive<NamedPointCoordinates[]> = reactive([])
+    const dataList: Ref<NamedPointCoordinates[]> = ref([])
 
     const updateData = async (name: string): Promise<void> => {
-      const res: NamedPointCoordinates | undefined = dataList.find((data) => data.name === name)
+      const res: NamedPointCoordinates | undefined = dataList.value.find((data) => data.name === name)
 
       if (res) viewerStore.updatePointsCollection(res)
     }
@@ -45,7 +43,7 @@ export const useDataStore = defineStore('dataStore',
         return [item[fieldsMap.lng] as number, item[fieldsMap.lat] as number]
       })
 
-      dataList.push({
+      dataList.value.push({
         name: sheet.name,
         coordinates
       })

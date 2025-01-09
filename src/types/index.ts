@@ -15,3 +15,5 @@ export interface NamedPointCoordinates {
   name: string,
   coordinates: [number, number][]
 }
+
+
