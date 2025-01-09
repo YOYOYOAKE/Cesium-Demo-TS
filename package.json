@@ -16,10 +16,11 @@
     "cesium": "^1.122.0",
     "element-plus": "^2.8.4",
     "pinia": "^2.2.4",
+    "rollup": "^2.25.0",
     "shapefile": "^0.6.6",
     "vite-plugin-cesium": "^1.2.23",
     "vue": "^3.5.10",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
