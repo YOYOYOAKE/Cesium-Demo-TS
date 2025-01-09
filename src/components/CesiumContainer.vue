@@ -1,8 +1,3 @@
-<template>
-  <div id="cesium-container"></div>
-  <MapController />
-</template>
-
 <script setup>
 import * as Cesium from 'cesium'
 import MapController from '@/components/MapController/Index.vue'
@@ -37,10 +32,12 @@ onMounted(() => {
   // 将CesiumViewer实例挂在到window全局对象上
   window.CesiumViewer = viewer
 })
-
-
-
 </script>
+
+<template>
+  <div id="cesium-container"></div>
+  <MapController />
+</template>
 
 <style lang="less" scoped>
 #cesium-container {

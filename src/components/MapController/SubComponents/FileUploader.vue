@@ -7,27 +7,24 @@ const emits = defineEmits(['save', 'cancel'])
 
 const { headers: sheetHeaders, content: sheetContent } = dataStore.getSheet()
 
-const previewSheetContent = sheetContent.slice(0, 3)
+const selectedFields: Record<string, string> = ref({})
 
-const selectedFields = ref({})
+const clearSelectedFields = (): void => selectedFields.value = {}
 
-const clearSelectedFields = (): void => {
-  selectedFields.value = {}
-}
-
-const requiredFields = ref([
+const requiredFields = [
   { name: 'lng', label: '经度', description: '点的经度' },
   { name: 'lat', label: '纬度', description: '点的纬度' },
-])
+]
 
 const handleSave = (): void => {
   const selectedFieldsValues = Object.keys(selectedFields.value)
-  const requiredFieldsNames = requiredFields.value.map(field => field.name)
+  const requiredFieldsNames = requiredFields.map(field => field.name)
 
   const lengthFlag = selectedFieldsValues.length === requiredFieldsNames.length
   const nameFlag = requiredFieldsNames.every(name => selectedFieldsValues.includes(name))
 
   if (lengthFlag && nameFlag) {
+    // Pass in the mapping of Excel headers and required fields to match the data
     dataStore.saveData(selectedFields.value)
     emits('save')
   } else {
@@ -46,7 +43,7 @@ defineExpose({
 
 <template>
   <el-divider content-position="left">部分数据预览</el-divider>
-  <el-table :data="previewSheetContent" style="width: 100%">
+  <el-table :data="sheetContent.slice(0, 3)" style="width: 100%">
     <el-table-column v-for="(header, index) in sheetHeaders" :key="index" :prop="header" :label="header" />
   </el-table>
 
@@ -63,10 +60,7 @@ defineExpose({
       <el-button type="primary" @click="handleSave">保存</el-button>
       <el-button @click="emits('cancel')">取消</el-button>
     </div>
-
-
   </el-form>
-
 </template>
 
 <style scoped lang="less">

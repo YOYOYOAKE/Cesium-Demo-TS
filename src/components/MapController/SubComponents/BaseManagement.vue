@@ -10,8 +10,6 @@
     <el-switch v-if="isShowAnnoLayerSwitch" v-model="isShowAnnoLayer" size="large" inline-prompt active-text="注记显示"
       inactive-text="注记隐藏" @change="updateAnnoLayer" />
   </div>
-
-
 </template>
 
 <script setup lang="ts">
@@ -30,8 +28,7 @@ const selectedMap: Ref<'img' | 'elec'> = ref('elec')
 const isShowAnnoLayerSwitch: Ref<boolean> = ref(false)
 
 const updateLayer = (mapStyle: 'img' | 'elec'): void => {
-
-  viewerStore.addBaseMap(mapStyle)
+  viewerStore.updateBaseMap(mapStyle)
 
   if (mapStyle === 'img') {
     isShowAnnoLayerSwitch.value = true

@@ -14,7 +14,7 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #region Base Map
 
-    const addBaseMap = (mapStyle: 'img' | 'elec' | 'cva'): void => {
+    const updateBaseMap = (mapStyle: 'img' | 'elec' | 'cva'): void => {
       cesiumViewer.imageryLayers.removeAll()
       cesiumViewer.imageryLayers.addImageryProvider(new AMapImageryProvider({
         style: mapStyle,
@@ -89,7 +89,7 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     let pointCollection: Cesium.PointPrimitiveCollection | null = null
 
-    const addPointsCollection = (data: NamedPointCoordinates): void => {
+    const updatePointsCollection = (data: NamedPointCoordinates): void => {
       const { coordinates } = data
       if (pointCollection) {
         cesiumViewer.scene.primitives.remove(pointCollection)
@@ -124,11 +124,11 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     return {
       cesiumViewer,
-      addBaseMap,
+      updateBaseMap,
       // removeAllMap,
       addAnnoMap, removeAnnoMap,
       addLayer, removeLayer,
-      addPointsCollection,
+      updatePointsCollection,
       addCityModel, removeCityModel,
       // addPrimitive, removePrimitive
     }

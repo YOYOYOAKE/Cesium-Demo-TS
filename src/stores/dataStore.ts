@@ -8,7 +8,8 @@ export const useDataStore = defineStore('dataStore',
 
     const viewerStore = useViewerStore()
 
-    // Define the sheet object
+    // #region Sheet Data
+
     const sheet: {
       name: string,
       headers: string[],
@@ -25,34 +26,28 @@ export const useDataStore = defineStore('dataStore',
       sheet.content = content
     }
 
-    const getSheet = () => {
-      return sheet
-    }
+    const getSheet = () => sheet
+
+    // #endregion
+
+    // #region Data List
 
     const dataList: Reactive<NamedPointCoordinates[]> = reactive([])
 
-    const createData = (newData: NamedPointCoordinates): void => {
-      dataList.push(newData)
-    }
-
     const updateData = async (name: string): Promise<void> => {
-      const res: NamedPointCoordinates | undefined = dataList.find((data) => {
-        return data.name === name
-      })
+      const res: NamedPointCoordinates | undefined = dataList.find((data) => data.name === name)
 
-      if (res) {
-        viewerStore.addPointsCollection(res)
-      }
+      if (res) viewerStore.updatePointsCollection(res)
     }
 
     const saveData = (fieldsMap: Record<string, string>): void => {
-      const result: [number, number][] = sheet.content.map((item) => {
+      const coordinates: [number, number][] = sheet.content.map((item) => {
         return [item[fieldsMap.lng] as number, item[fieldsMap.lat] as number]
       })
 
-      createData({
+      dataList.push({
         name: sheet.name,
-        coordinates: result
+        coordinates
       })
 
       // Reset the sheet object after saving the data
@@ -61,11 +56,10 @@ export const useDataStore = defineStore('dataStore',
       sheet.content = []
     }
 
+    // #endregion
+
     return {
       setSheet, getSheet,
-      dataList,
-      createData,
-      updateData,
-      saveData
+      dataList, updateData, saveData
     }
   })
