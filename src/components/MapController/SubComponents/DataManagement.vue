@@ -15,7 +15,7 @@ const isAllowDataUpload: Ref<boolean> = ref(false)
 
 const uploadDataName: Ref<string> = ref('')
 
-const { dataList } = dataStore
+const { pointDataList, odDataList } = dataStore
 const dataSelectRef = useTemplateRef('dataSelectRef')
 
 const uploadData = async (elFile): Promise<void> => {
@@ -23,7 +23,13 @@ const uploadData = async (elFile): Promise<void> => {
   uploadDataName.value = uploadDataName.value || nativeFile.name
 
   try {
-    dataList.forEach(data => {
+    pointDataList.forEach(data => {
+      if (data.name === uploadDataName.value) {
+        uploadDataName.value = ''
+        throw new Error('与现有数据名称重复')
+      }
+    })
+    odDataList.forEach(data => {
       if (data.name === uploadDataName.value) {
         uploadDataName.value = ''
         throw new Error('与现有数据名称重复')
@@ -71,7 +77,13 @@ const uploadData = async (elFile): Promise<void> => {
 <template>
   <div>
     <el-select ref="dataSelectRef" v-model="selectedData" size="large" placeholder="加载或添加数据">
-      <el-option v-for="(data, index) in dataList" :key="index" :label="data.name" :value="data.name" />
+      <el-option-group label="点数据">
+        <el-option v-for="(data, index) in pointDataList" :key="index" :label="data.name" :value="data.name" />
+      </el-option-group>
+
+      <el-option-group label="OD数据">
+        <el-option v-for="(data, index) in odDataList" :key="index" :label="data.name" :value="data.name" />
+      </el-option-group>
 
       <template #footer>
         <el-button v-if="!isAllowDataUpload" text bg size="small" @click="isAllowDataUpload = true">

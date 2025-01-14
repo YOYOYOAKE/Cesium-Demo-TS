@@ -16,4 +16,8 @@ export interface NamedPointCoordinates {
   coordinates: [number, number][]
 }
 
+export interface NamedOdCoordinates {
+  name: string,
+  coordinates: [number, number, number][][]
+}
 

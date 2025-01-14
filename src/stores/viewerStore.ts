@@ -1,6 +1,6 @@
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
-import { type NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer } from '../types'
+import { type NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer, NamedOdCoordinates } from '../types'
 import config from '../config'
 
 export const useViewerStore = defineStore('cesiumViewer',
@@ -91,6 +91,39 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #endregion
 
+    // #region OD数据
+
+    // let odCollection: Cesium.PolylineCollection | null = null
+
+    const updateOdCollection = (data: NamedOdCoordinates): void => {
+      const { coordinates: parabolas } = data
+      // console.log(parabolas)
+      // 将parabolaLine绘制到Cesium中
+      parabolas.forEach(parabola => {
+        const positions: Cesium.Cartesian3[] = []
+        parabola.forEach(coordinate => {
+          const position = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], coordinate[2])
+          if (position.x && position.y && position.z) {
+            positions.push(position)
+          } else {
+            console.log(parabola)
+            console.log(coordinate)
+            console.log(position)
+          }
+        })
+
+        cesiumViewer.entities.add({
+          polyline: {
+            positions: positions,
+            width: 0.4,
+            material: Cesium.Color.RED
+          }
+        })
+      })
+    }
+
+    // #endregion
+
     // #region 建筑白模
 
     let cityModel: Cesium.Cesium3DTileset | null = null
@@ -111,7 +144,7 @@ export const useViewerStore = defineStore('cesiumViewer',
       updateBaseMap,
       addAnnoMap, removeAnnoMap,
       addLayer: addShp, removeLayer: removeShp,
-      updatePointsCollection,
+      updatePointsCollection, updateOdCollection,
       addCityModel, removeCityModel,
     }
   })
