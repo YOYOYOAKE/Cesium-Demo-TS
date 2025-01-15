@@ -2,6 +2,8 @@
 
 const isEnableFxaa: Ref<boolean> = ref(JSON.parse(localStorage.getItem('YOYOGeoViewer-Options-isEnableFxaa') || 'false'))
 
+const isCancelling = ref(false)
+
 watch(isEnableFxaa, (newValue, oldValue) => {
   const enableFxaa = () => {
     isEnableFxaa.value = true
@@ -14,16 +16,23 @@ watch(isEnableFxaa, (newValue, oldValue) => {
   }
 
   if (newValue && !oldValue) {
-    ElMessageBox.confirm('开启抗锯齿会降低性能，是否继续？')
+    ElMessageBox.confirm(
+      '开启抗锯齿会降低性能，是否继续？',
+      '警告',
+      {
+        confirmButtonText: '确定（将刷新页面）',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
       .then(() => {
         enableFxaa()
         window.location.reload()
-
       })
       .catch(() => {
+        isCancelling.value = true
         disableFxaa()
       })
-  } else {
+  } else if (oldValue && !isCancelling.value) {
     disableFxaa()
     window.location.reload()
   }
