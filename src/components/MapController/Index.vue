@@ -3,6 +3,7 @@ import FileUploader from './SubComponents/FileUploader.vue'
 import BaseManagement from '@/components/MapController/SubComponents/BaseManagement.vue'
 import ShpManagement from '@/components/MapController/SubComponents/ShpManagement.vue'
 import DataManagement from '@/components/MapController/SubComponents/DataManagement.vue'
+import GraphicalSetting from '@/components/MapController/SubComponents/GraphicalSetting.vue'
 
 defineOptions({
   name: 'MapController',
@@ -65,7 +66,8 @@ const handleSubDrawerCloseAfterCancel = (): void => {
     <ShpManagement />
     <el-divider content-position="left">数据管理</el-divider>
     <DataManagement @openFileUploader="openFileUploader" />
-
+    <el-divider content-position="left">图形设置</el-divider>
+    <GraphicalSetting />
     <!-- 二级抽屉 -->
     <div>
       <el-drawer v-model="isSubDrawerOpen" title="预览并选择字段" direction="ltr"

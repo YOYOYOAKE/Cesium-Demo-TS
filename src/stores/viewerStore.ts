@@ -6,7 +6,7 @@ import config from '../config'
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
     // @ts-expect-error: 将Cesium Viewer的实例挂在到全局对象window上，以便在其他地方调用。
-    const cesiumViewer = window.CesiumViewer
+    const cesiumViewer: Cesium.Viewer = window.CesiumViewer
 
     // #region 底图
 
@@ -93,23 +93,17 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #region OD数据
 
-    // let odCollection: Cesium.PolylineCollection | null = null
-
     const updateOdCollection = (data: NamedOdCoordinates): void => {
+      // 先清空之前的OD数据
+      cesiumViewer.entities.removeAll()
+
       const { coordinates: parabolas } = data
-      // console.log(parabolas)
       // 将parabolaLine绘制到Cesium中
       parabolas.forEach(parabola => {
         const positions: Cesium.Cartesian3[] = []
         parabola.forEach(coordinate => {
           const position = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], coordinate[2])
-          if (position.x && position.y && position.z) {
-            positions.push(position)
-          } else {
-            console.log(parabola)
-            console.log(coordinate)
-            console.log(position)
-          }
+          if (position.x && position.y && position.z) positions.push(position)
         })
 
         cesiumViewer.entities.add({

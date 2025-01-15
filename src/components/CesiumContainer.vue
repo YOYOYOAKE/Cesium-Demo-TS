@@ -29,6 +29,21 @@ onMounted(() => {
   viewer.scene.screenSpaceCameraController.minimumZoomDistance = 350
   viewer.scene.screenSpaceCameraController.maximumZoomDistance = 300000
 
+  // 是否开启抗锯齿
+  const isEnableFxaa = JSON.parse(localStorage.getItem('YOYOGeoViewer-Options-isEnableFxaa'))
+
+  if (isEnableFxaa ) {
+    ElMessage.info('已开启抗锯齿')
+    //判断是否支持图像渲染像素化处理
+    if (Cesium.FeatureDetection.supportsImageRenderingPixelated()) {
+      viewer.resolutionScale = window.devicePixelRatio
+    }
+    viewer.scene.fxaa = true
+    viewer.scene.postProcessStages.fxaa.enabled = true
+  }
+
+
+
   // 将CesiumViewer实例挂在到window全局对象上
   window.CesiumViewer = viewer
 })

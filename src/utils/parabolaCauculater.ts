@@ -11,7 +11,7 @@ const getParabola = (startPoint: [number, number], endPoint: [number, number], r
     ? Math.abs(startPoint[0] - endPoint[0])
     : Math.abs(startPoint[1] - endPoint[1]) // 计算横纵间距较大者
 
-  const num = 19 // 分段数
+  const num = 29 // 分段数
   const result: [number, number, number][] = [] // 存储结果的数组
   let dlt = L / num // 每段的长度
 

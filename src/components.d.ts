@@ -28,6 +28,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FileUploader: typeof import('./components/MapController/SubComponents/FileUploader.vue')['default']
+    GraphicalSetting: typeof import('./components/MapController/SubComponents/GraphicalSetting.vue')['default']
     IEpTools: typeof import('~icons/ep/tools')['default']
     Index: typeof import('./components/MapController/Index.vue')['default']
     MapController: typeof import('./components/MapController/Index.vue')['default']
