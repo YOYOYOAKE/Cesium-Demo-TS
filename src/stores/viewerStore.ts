@@ -1,6 +1,6 @@
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
-import { type NamedPointCoordinates, type NamedGeoJson, type NamedGeoJsonLayer, NamedOdCoordinates } from '../types'
+import { NamedPointCollection, NamedGeoJson, NamedDataSource, NamedParabola3Collection } from '../types'
 import config from '../config'
 
 export const useViewerStore = defineStore('cesiumViewer',
@@ -17,9 +17,6 @@ export const useViewerStore = defineStore('cesiumViewer',
         crs: 'WGS84',
       }))
     }
-
-    // const removeAllMap = (): void => {
-    // }
 
     // #endregion
 
@@ -45,7 +42,8 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #region Shp
 
-    const currentShpList: NamedGeoJsonLayer[] = []
+    // 将GeoJSON加载为Cesium中的DataSource来实现Shp图层
+    const currentShpList: NamedDataSource[] = []
 
     const addShp = async (data: NamedGeoJson): Promise<void> => {
       const dataSource = await cesiumViewer.dataSources.add(await Cesium.GeoJsonDataSource.load(data.geoJson))
@@ -53,7 +51,7 @@ export const useViewerStore = defineStore('cesiumViewer',
 
       currentShpList.push({
         name: data.name,
-        dataSource: dataSource,
+        dataSource,
       })
     }
 
@@ -68,41 +66,35 @@ export const useViewerStore = defineStore('cesiumViewer',
 
     // #endregion
 
-    // #region 点数据
+    // #region 点数据和OD数据
 
     let pointCollection: Cesium.PointPrimitiveCollection | null = null
 
     // 因为地图上只同时存在一个点集，所以此处使用“update”而非“add”
-    const updatePointsCollection = (data: NamedPointCoordinates): void => {
-      const { coordinates } = data
-      if (pointCollection) {
-        cesiumViewer.scene.primitives.remove(pointCollection)
-        pointCollection = null
-      }
+    const updatePointsCollection = ({ coordinates } : NamedPointCollection): void => {
+      clearMap()
+
+      // 以Primitive方式将点绘制到Cesium中
       pointCollection = cesiumViewer.scene.primitives.add(new Cesium.PointPrimitiveCollection())
       coordinates.forEach((coordinate) => {
         pointCollection?.add({
           position: Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1]),
           color: Cesium.Color.RED,
-          pixelSize: 10,
+          pixelSize: 2,
         })
       })
     }
 
-    // #endregion
+    const updateOdCollection = ({ parabolas }: NamedParabola3Collection): void => {
+      clearMap()
 
-    // #region OD数据
-
-    const updateOdCollection = (data: NamedOdCoordinates): void => {
-      // 先清空之前的OD数据
-      cesiumViewer.entities.removeAll()
-
-      const { coordinates: parabolas } = data
-      // 将parabolaLine绘制到Cesium中
+      // 以Entity方式将抛物线绘制到Cesium中
       parabolas.forEach(parabola => {
         const positions: Cesium.Cartesian3[] = []
         parabola.forEach(coordinate => {
           const position = Cesium.Cartesian3.fromDegrees(coordinate[0], coordinate[1], coordinate[2])
+
+          // 有时候会出现坐标转换出错的情况，此时不添加到positions中渲染
           if (position.x && position.y && position.z) positions.push(position)
         })
 
@@ -114,6 +106,14 @@ export const useViewerStore = defineStore('cesiumViewer',
           }
         })
       })
+    }
+
+    const clearMap = (): void => {
+      if (pointCollection) {
+        cesiumViewer.scene.primitives.remove(pointCollection)
+        pointCollection = null
+      }
+      cesiumViewer.entities.removeAll()
     }
 
     // #endregion
@@ -137,7 +137,7 @@ export const useViewerStore = defineStore('cesiumViewer',
       cesiumViewer,
       updateBaseMap,
       addAnnoMap, removeAnnoMap,
-      addLayer: addShp, removeLayer: removeShp,
+      addShp, removeShp,
       updatePointsCollection, updateOdCollection,
       addCityModel, removeCityModel,
     }

@@ -1,23 +1,32 @@
 import { GeoJSON } from 'geojson'
 import { DataSource } from 'cesium'
 
-export interface NamedGeoJson {
+export type NamedGeoJson = {
   name: string,
   geoJson: GeoJSON
 }
 
-export interface NamedGeoJsonLayer {
+export type NamedDataSource = {
   name: string,
   dataSource: DataSource
 }
 
-export interface NamedPointCoordinates {
+export type Coordinate2 = [number, number]
+
+export type Coordinate3 = [number, number, number]
+
+export type NamedPointCollection = {
   name: string,
-  coordinates: [number, number][]
+  coordinates: Coordinate2[]
 }
 
-export interface NamedOdCoordinates {
+export type NamedParabola3Collection = {
   name: string,
-  coordinates: [number, number, number][][]
+  parabolas: Coordinate3[][]
 }
 
+export type SheetObject = {
+  name: string,
+  headers: string[],
+  content: Record<string, string | number>[]
+}

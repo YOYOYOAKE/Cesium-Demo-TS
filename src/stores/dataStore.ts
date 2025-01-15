@@ -1,5 +1,5 @@
 import { useViewerStore } from './viewerStore'
-import { NamedOdCoordinates, type NamedPointCoordinates } from '../types'
+import { Coordinate2, NamedParabola3Collection, SheetObject, type NamedPointCollection } from '../types'
 import { getParabolaCollection } from '../utils/parabolaCauculater'
 
 export const useDataStore = defineStore('dataStore',
@@ -9,11 +9,7 @@ export const useDataStore = defineStore('dataStore',
 
     // #region 原始表格
 
-    const sheet: Ref<{
-      name: string,
-      headers: string[],
-      content: Record<string, string | number>[]
-    }> = ref({
+    const sheet: Ref<SheetObject> = ref({
       name: '',
       headers: [],
       content: []
@@ -29,16 +25,16 @@ export const useDataStore = defineStore('dataStore',
 
     // #region 点、OD数据列表
 
-    const pointDataList: Ref<NamedPointCoordinates[]> = ref([])
+    const pointDataList: Ref<NamedPointCollection[]> = ref([])
 
-    const odDataList: Ref<NamedOdCoordinates[]> = ref([])
+    const odDataList: Ref<NamedParabola3Collection[]> = ref([])
 
     // #endregion
 
     // #region 更新与保存数据
 
     const updateData = (name: string) => {
-      let res: NamedPointCoordinates | NamedOdCoordinates | undefined = pointDataList.value.find((data) => data.name === name)
+      let res: NamedPointCollection | NamedParabola3Collection | undefined = pointDataList.value.find((data) => data.name === name)
 
       if (res) {
         viewerStore.updatePointsCollection(res)
@@ -51,7 +47,7 @@ export const useDataStore = defineStore('dataStore',
     const saveData = (fieldsMap: Record<string, string>, dataType: 'point' | 'od'): void => {
 
       if (dataType === 'point') {
-        const coordinates: [number, number][] = sheet.value.content.map((item) => {
+        const coordinates: Coordinate2[] = sheet.value.content.map((item) => {
           return [item[fieldsMap.lng] as number, item[fieldsMap.lat] as number]
         })
         pointDataList.value.push({
@@ -59,7 +55,7 @@ export const useDataStore = defineStore('dataStore',
           coordinates
         })
       } else if (dataType === 'od') {
-        const coordinates: { o: [number, number], d: [number, number] }[] = sheet.value.content.map((item) => {
+        const coordinates: { o: Coordinate2, d: Coordinate2 }[] = sheet.value.content.map((item) => {
           return {
             o: [item[fieldsMap.oLng] as number, item[fieldsMap.oLat] as number],
             d: [item[fieldsMap.dLng] as number, item[fieldsMap.dLat] as number]
@@ -67,7 +63,7 @@ export const useDataStore = defineStore('dataStore',
         })
         odDataList.value.push({
           name: sheet.value.name,
-          coordinates: getParabolaCollection(coordinates)
+          parabolas: getParabolaCollection(coordinates)
         })
       }
 
