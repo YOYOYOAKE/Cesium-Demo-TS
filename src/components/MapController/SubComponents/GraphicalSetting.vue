@@ -43,7 +43,7 @@ watch(isEnableFxaa, (newValue, oldValue) => {
 <template>
   <div class="graphical-setting">
     <div class="graphical-setting-item">
-      <span>抗锯齿</span>
+      <span>高清显示</span>
       <el-switch v-model="isEnableFxaa" inline-prompt active-text="开" inactive-text="关" />
     </div>
   </div>

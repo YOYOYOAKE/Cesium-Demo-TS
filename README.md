@@ -1,37 +1,47 @@
-# Cesium-Demo-TS
-A project built with Vue 3, TypeScript, and Cesium that displays shapefiles or other geographic data in the browser.
+# YOYOGeoViewer
 
-## Features
+由 Vue3 + TypeScript + Cesium 构建的地理信息可视化工具。
 
-- **Base map selection**: Choose from available maps. Currently, AMap Vector Map and AMap Image Map are supported.
-- **Shapefile display**: Upload and display shapefiles from your local computer. You can display all, part, or none of the data.
+## 1 功能
+
+已实现的功能
+
+- ✅ **多底图切换**：支持高德矢量地图和高德影像地图。
+- ✅ **建筑模型显示**：支持
+- ✅ **Shp文件显示**：支持本地Shp文件的上传与显示。由于Cesium性能限制，建议只上传行政区类的数据量较小的Shp。
+- ✅ **散点图渲染**：支持从Excel文件中读取海量点数据并渲染。
+- ✅ **OD线渲染**：支持从Excel文件中读取海量OD数据并渲染。
+- ✅ **高清化显示**：满足部分场景下的高清显示需求。
+
+待实现的功能
+- ⭕️ 自定义底图及多样式底图
+- ⭕️ 自定义建筑模型数据源
+- ⭕️ 自定义散点及OD线样式
+- ⭕️ 热力图及三维热力图
+- ⭕️ 运行轨迹图
 
 ![Main](./image/main.png)
 
-## Future Improvements
 
-- **Support for more formats**: Additional data formats such as GeoJSON, CSV, and XLSX will be supported.
-- **More tools**: Visualization tools like heat maps, scatter maps, and OD stream maps will be added.
+## 2 部署
 
-## Installation and Usage
-
-1. Clone this repository:
+1. 克隆仓库
 
 ```shell
-git clone https://github.com/YOYOYOAKE/Cesium-Demo-TS.git
+git clone https://github.com/YOYOYOAKE/YOYOGeoViewer.git
 ```
 
-2. Navigate to the project directory and use pnpm to install the dependencies (Node.js version >= 18 is recommended):
+2. 切换至项目文件夹内，使用`pnpm`安装项目依赖。（需要`Node.js`>=18）
 
 ```shell
 npm -g install pnpm
 pnpm install
 ```
 
-3. Start the development server:
+3. 启动项目。
 
-```
-npm run dev
+```shell
+pnpm run dev
 ```
 
-4. Open the app in your browser at the provided local address (e.g., http://localhost:5173).
+4. 在浏览器中输入地址`http://localhost:5173`访问YOYOGeoViewer。

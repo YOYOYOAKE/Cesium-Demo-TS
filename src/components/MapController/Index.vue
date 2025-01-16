@@ -59,7 +59,7 @@ const handleSubDrawerCloseAfterCancel = (): void => {
 </script>
 
 <template>
-  <el-drawer v-model="isDrawerOpen" title="Cesium Demo" direction="ltr" size="35%">
+  <el-drawer v-model="isDrawerOpen" title="YOYOGeoViewer" direction="ltr" size="35%">
     <el-divider content-position="left">底图管理</el-divider>
     <BaseManagement />
     <el-divider content-position="left">Shp图层管理</el-divider>
