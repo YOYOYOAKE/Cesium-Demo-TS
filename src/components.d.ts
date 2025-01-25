@@ -18,7 +18,6 @@ declare module 'vue' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElOptionGr: typeof import('element-plus/es')['ElOptionGr']
     ElOptionGroup: typeof import('element-plus/es')['ElOptionGroup']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
@@ -31,7 +30,6 @@ declare module 'vue' {
     GraphicalSetting: typeof import('./components/MapController/SubComponents/GraphicalSetting.vue')['default']
     IEpTools: typeof import('~icons/ep/tools')['default']
     Index: typeof import('./components/MapController/Index.vue')['default']
-    MapController: typeof import('./components/MapController/Index.vue')['default']
     ShpManagement: typeof import('./components/MapController/SubComponents/ShpManagement.vue')['default']
   }
 }
