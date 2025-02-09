@@ -24,5 +24,3 @@ dist-ssr
 *.sw?
 
 public/models/*
-src/config/index.ts
-src/config/index.ts
