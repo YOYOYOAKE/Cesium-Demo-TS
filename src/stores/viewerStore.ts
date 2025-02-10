@@ -1,7 +1,8 @@
 import { AMapImageryProvider } from '@cesium-china/cesium-map'
 import * as Cesium from 'cesium'
 import { NamedPointCollection, NamedGeoJson, NamedDataSource, NamedParabola3Collection } from '../types'
-import config from '../config'
+
+const TILESET_URL: string = 'http://47.93.253.166:9000/tileset.json'
 
 export const useViewerStore = defineStore('cesiumViewer',
   () => {
@@ -71,7 +72,7 @@ export const useViewerStore = defineStore('cesiumViewer',
     let pointCollection: Cesium.PointPrimitiveCollection | null = null
 
     // 因为地图上只同时存在一个点集，所以此处使用“update”而非“add”
-    const updatePointsCollection = ({ coordinates } : NamedPointCollection): void => {
+    const updatePointsCollection = ({ coordinates }: NamedPointCollection): void => {
       clearMap()
 
       // 以Primitive方式将点绘制到Cesium中
@@ -123,7 +124,7 @@ export const useViewerStore = defineStore('cesiumViewer',
     let cityModel: Cesium.Cesium3DTileset | null = null
 
     const addCityModel = async () => {
-      const tileset = await Cesium.Cesium3DTileset.fromUrl(config.TILESET_URL)
+      const tileset = await Cesium.Cesium3DTileset.fromUrl(TILESET_URL)
       cityModel = cesiumViewer.scene.primitives.add(tileset)
     }
 
